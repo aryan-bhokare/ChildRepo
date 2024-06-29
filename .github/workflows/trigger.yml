@@ -8,13 +8,17 @@ on:
       - main
 
 jobs:
-  trigger_central:
+  dispatch:
+    name: triger central
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        repo: ['aryan-bhokare/ParentRepo']
+    timeout-minutes: 5
     steps:
-      - name: Trigger central documentation repository workflow
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.DOCS_ACCESS_TOKEN }}
-          repository: aryan-bhokare/ParentRepo
-          event-type: update-docs
+      - name: Dispatch to workflows
+        run: |
+            curl -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.DOCS_ACCESS_TOKEN }}" \
+            --request POST \
+            --data '{"event_type": "update-docs", "client_payload": { "foo": "bar" }}' https://api.github.com/repos/${{ matrix.repo }}/dispatches
