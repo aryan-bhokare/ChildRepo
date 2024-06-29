@@ -1,0 +1,19 @@
+name: Trigger Central Documentation Repository Workflow
+
+on:
+  push:
+    branches:
+      - master
+      - mkdocs
+
+jobs:
+  trigger_central:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger central documentation repository workflow
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.DOCS_ACCESS_TOKEN }}
+          repository: aryan-bhokare/ParentRepo
+          event-type: update-docs
